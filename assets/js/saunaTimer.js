@@ -1,6 +1,10 @@
 // saunaTimer.js
-// We use the public Piped instance at yewtu.eu (no API key required)
-const INVIDIOUS = 'https://yewtu.eu';
+// Try these public Piped/Invidious instances in order:
+const INSTANCES = [
+  'https://piped.kavin.rocks',
+  'https://yewtu.be',
+  'https://yewtu.eu'
+];
 
 document.addEventListener('DOMContentLoaded', () => {
   const app = document.getElementById('sauna-app');
@@ -23,14 +27,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const select    = document.getElementById('video-select');
   const container = document.getElementById('timers-container');
 
-  // Search YouTube via Invidious
+  // Attempt search on each instance until one works
   searchBtn.addEventListener('click', () => {
     const q = document.getElementById('video-search').value.trim();
-    if (!q) return alert('Please enter keywords to search.');
-    fetch(`${INVIDIOUS}/api/v1/search?query=${encodeURIComponent(q)}&type=video&limit=5`)
-      .then(res => res.json())
+    if (!q) {
+      alert('Please enter keywords to search.');
+      return;
+    }
+    select.innerHTML = '<option value="">-- No video selected --</option>';
+    performSearch(q, 0);
+  });
+
+  function performSearch(query, idx) {
+    if (idx >= INSTANCES.length) {
+      alert('Video search failed—please try again later.');
+      return;
+    }
+    const base = INSTANCES[idx];
+    fetch(`${base}/api/v1/search?query=${encodeURIComponent(query)}&type=video&limit=5`)
+      .then(res => {
+        if (!res.ok) throw new Error('Non-200 response');
+        return res.json();
+      })
       .then(list => {
-        select.innerHTML = '<option value="">-- No video selected --</option>';
         list.forEach(item => {
           const opt = document.createElement('option');
           opt.value = item.videoId;
@@ -39,12 +58,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       })
       .catch(err => {
-        console.error(err);
-        alert('Video search failed—try again.');
+        console.warn(`Search failed on ${base}`, err);
+        performSearch(query, idx + 1);
       });
-  });
+  }
 
-  // Form submits a new timer
   form.addEventListener('submit', e => {
     e.preventDefault();
     const name    = document.getElementById('person-name').value.trim();
@@ -95,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
       startTimer();
     });
 
-    // clear inputs
     form.reset();
     select.innerHTML = '<option value="">-- No video selected --</option>';
 
@@ -109,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
           running = false;
           toggleBtn.disabled = true;
           card.classList.remove('warning', 'danger');
-          // embed & autoplay if chosen
           if (videoId) {
             videoCont.innerHTML = `
               <iframe
@@ -119,10 +135,9 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             videoCont.style.display = 'block';
           }
-          // (no popup)
         } else {
           remaining--;
-          // color warnings
+          // warning/danger classes
           if (remaining < 10) {
             card.classList.add('danger');
             card.classList.remove('warning');
