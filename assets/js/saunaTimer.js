@@ -27,40 +27,62 @@ document.addEventListener('DOMContentLoaded', () => {
     card.innerHTML = `
       <h3>${name}</h3>
       <div class="time-display">${formatTime(minutes * 60)}</div>
-      <button class="stop-btn">⏸️</button>
+      <button class="toggle-btn">⏸️</button>
       <button class="reset-btn">↻</button>
     `;
     container.appendChild(card);
 
-    // timer logic
+    // timer state
     let remaining = minutes * 60;
-    let interval  = startCountdown();
+    let interval  = null;
+    let running   = false;
 
-    // stop
-    card.querySelector('.stop-btn')
-      .addEventListener('click', () => clearInterval(interval));
+    const display   = card.querySelector('.time-display');
+    const toggleBtn = card.querySelector('.toggle-btn');
+    const resetBtn  = card.querySelector('.reset-btn');
 
-    // reset
-    card.querySelector('.reset-btn')
-      .addEventListener('click', () => {
+    // start initially
+    startTimer();
+
+    // Play/Pause toggle
+    toggleBtn.addEventListener('click', () => {
+      if (running) {
+        // pause
         clearInterval(interval);
-        remaining = minutes * 60;
-        card.querySelector('.time-display').textContent = formatTime(remaining);
-        interval = startCountdown();
-      });
+        running = false;
+        toggleBtn.textContent = '▶️';
+      } else {
+        // play
+        startTimer();
+      }
+    });
 
-    // clear form
+    // Reset
+    resetBtn.addEventListener('click', () => {
+      clearInterval(interval);
+      remaining = minutes * 60;
+      display.textContent = formatTime(remaining);
+      toggleBtn.textContent = '⏸️';
+      startTimer();
+    });
+
+    // clear form inputs
     nameInput.value = '';
     minsInput.value = '';
 
-    function startCountdown() {
-      return setInterval(() => {
+    function startTimer() {
+      if (running) return;
+      running   = true;
+      toggleBtn.textContent = '⏸️';
+      interval = setInterval(() => {
         if (remaining <= 0) {
           clearInterval(interval);
+          running = false;
+          toggleBtn.disabled = true;
           alert(`${name}'s timer finished!`);
         } else {
           remaining--;
-          card.querySelector('.time-display').textContent = formatTime(remaining);
+          display.textContent = formatTime(remaining);
         }
       }, 1000);
     }
