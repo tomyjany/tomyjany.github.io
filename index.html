@@ -65,11 +65,14 @@
 
     <section id="sauna">
       <h2>Sauna Timer</h2>
-      <div id="sauna-timer">
-        🕒 Sauna Timer App Placeholder
-      </div>
-      <p>(Coming soon: multiple-person timers, YouTube alarms, reset &amp; edit controls…)</p>
+      <div id="sauna-app"><!-- saunaTimer.js will render here --></div>
     </section>
+
+    <!-- add inside <head> if not already: -->
+    <link rel="stylesheet" href="assets/css/sauna.css">
+
+    <!-- add just before </body>: -->
+    <script defer src="assets/js/saunaTimer.js"></script>
   </div>
 </body>
 </html>
