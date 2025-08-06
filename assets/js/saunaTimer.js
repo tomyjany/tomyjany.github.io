@@ -1,73 +1,25 @@
 // saunaTimer.js
-// Try these public Piped/Invidious instances in order:
-const INSTANCES = [
-  'https://piped.kavin.rocks',
-  'https://yewtu.be',
-  'https://yewtu.eu'
-];
-
 document.addEventListener('DOMContentLoaded', () => {
   const app = document.getElementById('sauna-app');
   app.innerHTML = `
     <form id="timer-form">
       <input type="text" id="person-name" placeholder="Name" required />
-      <input type="number" id="timer-minutes" placeholder="Min" required min="1" />
-      <input type="text" id="video-search" placeholder="YouTube keywords" />
-      <button type="button" id="search-video-btn">Search Videos</button>
-      <select id="video-select">
-        <option value="">-- No video selected --</option>
-      </select>
+      <input type="number" id="timer-minutes" placeholder="Minutes" required min="1" />
+      <input type="url" id="timer-url" placeholder="YouTube URL (optional)" />
       <button type="submit">Start</button>
     </form>
     <div id="timers-container"></div>
   `;
 
   const form      = document.getElementById('timer-form');
-  const searchBtn = document.getElementById('search-video-btn');
-  const select    = document.getElementById('video-select');
   const container = document.getElementById('timers-container');
-
-  // Attempt search on each instance until one works
-  searchBtn.addEventListener('click', () => {
-    const q = document.getElementById('video-search').value.trim();
-    if (!q) {
-      alert('Please enter keywords to search.');
-      return;
-    }
-    select.innerHTML = '<option value="">-- No video selected --</option>';
-    performSearch(q, 0);
-  });
-
-  function performSearch(query, idx) {
-    if (idx >= INSTANCES.length) {
-      alert('Video search failed—please try again later.');
-      return;
-    }
-    const base = INSTANCES[idx];
-    fetch(`${base}/api/v1/search?query=${encodeURIComponent(query)}&type=video&limit=5`)
-      .then(res => {
-        if (!res.ok) throw new Error('Non-200 response');
-        return res.json();
-      })
-      .then(list => {
-        list.forEach(item => {
-          const opt = document.createElement('option');
-          opt.value = item.videoId;
-          opt.textContent = item.title;
-          select.appendChild(opt);
-        });
-      })
-      .catch(err => {
-        console.warn(`Search failed on ${base}`, err);
-        performSearch(query, idx + 1);
-      });
-  }
 
   form.addEventListener('submit', e => {
     e.preventDefault();
-    const name    = document.getElementById('person-name').value.trim();
-    const mins    = parseInt(document.getElementById('timer-minutes').value, 10);
-    const videoId = select.value;
+
+    const name   = document.getElementById('person-name').value.trim();
+    const mins   = parseInt(document.getElementById('timer-minutes').value, 10);
+    const url    = document.getElementById('timer-url').value.trim();
     if (!name || isNaN(mins) || mins < 1) return;
 
     const card = document.createElement('div');
@@ -114,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     form.reset();
-    select.innerHTML = '<option value="">-- No video selected --</option>';
 
     function startTimer() {
       if (running) return;
@@ -126,18 +77,20 @@ document.addEventListener('DOMContentLoaded', () => {
           running = false;
           toggleBtn.disabled = true;
           card.classList.remove('warning', 'danger');
-          if (videoId) {
-            videoCont.innerHTML = `
-              <iframe
-                src="https://www.youtube.com/embed/${videoId}?autoplay=1"
-                allow="autoplay; encrypted-media"
-              ></iframe>
-            `;
-            videoCont.style.display = 'block';
+          if (url) {
+            const vidId = extractYouTubeID(url);
+            if (vidId) {
+              videoCont.innerHTML = `
+                <iframe
+                  src="https://www.youtube.com/embed/${vidId}?autoplay=1"
+                  allow="autoplay; encrypted-media"
+                ></iframe>
+              `;
+              videoCont.style.display = 'block';
+            }
           }
         } else {
           remaining--;
-          // warning/danger classes
           if (remaining < 10) {
             card.classList.add('danger');
             card.classList.remove('warning');
@@ -153,9 +106,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function formatTime(secs) {
-    const m = String(Math.floor(secs / 60)).padStart(2, '0');
-    const s = String(secs % 60).padStart(2, '0');
+  function formatTime(sec) {
+    const m = Math.floor(sec / 60).toString().padStart(2, '0');
+    const s = (sec % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
+  }
+
+  function extractYouTubeID(url) {
+    const m = url.match(/(?:youtu\.be\/|v=)([A-Za-z0-9_-]{11})/);
+    return m ? m[1] : null;
   }
 });
