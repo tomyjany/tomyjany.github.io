@@ -1,25 +1,11 @@
-
-.timer-card .video-container {
-  margin-top: 0.75rem;
-  width: 100%;
-  position: relative;
-  padding-bottom: 56.25%; /* 16:9 ratio */
-  height: 0;
-}
-.timer-card .video-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
+// saunaTimer.js
 document.addEventListener('DOMContentLoaded', () => {
   const app = document.getElementById('sauna-app');
   app.innerHTML = `
     <form id="timer-form">
       <input type="text" id="person-name" placeholder="Name" required />
       <input type="number" id="timer-minutes" placeholder="Min" required min="1" />
+      <input type="url" id="timer-video" placeholder="YouTube URL (optional)" pattern="https?://.*" />
       <button type="submit">Start</button>
     </form>
     <div id="timers-container"></div>
@@ -30,10 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   form.addEventListener('submit', e => {
     e.preventDefault();
+
     const nameInput  = form.querySelector('#person-name');
     const minsInput  = form.querySelector('#timer-minutes');
+    const urlInput   = form.querySelector('#timer-video');
     const name       = nameInput.value.trim();
     const minutes    = parseInt(minsInput.value, 10);
+    const videoUrl   = urlInput.value.trim();
     if (!name || isNaN(minutes) || minutes < 1) return;
 
     // create card
@@ -44,56 +33,72 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="time-display">${formatTime(minutes * 60)}</div>
       <button class="toggle-btn">⏸️</button>
       <button class="reset-btn">↻</button>
+      <div class="video-container" style="display:none;"></div>
     `;
     container.appendChild(card);
 
-    // timer state
     let remaining = minutes * 60;
     let interval  = null;
     let running   = false;
 
-    const display   = card.querySelector('.time-display');
-    const toggleBtn = card.querySelector('.toggle-btn');
-    const resetBtn  = card.querySelector('.reset-btn');
+    const display      = card.querySelector('.time-display');
+    const toggleBtn    = card.querySelector('.toggle-btn');
+    const resetBtn     = card.querySelector('.reset-btn');
+    const videoCont    = card.querySelector('.video-container');
 
-    // start initially
+    // start immediately
     startTimer();
 
-    // Play/Pause toggle
+    // play/pause toggle
     toggleBtn.addEventListener('click', () => {
       if (running) {
-        // pause
         clearInterval(interval);
         running = false;
         toggleBtn.textContent = '▶️';
       } else {
-        // play
         startTimer();
       }
     });
 
-    // Reset
+    // reset
     resetBtn.addEventListener('click', () => {
       clearInterval(interval);
       remaining = minutes * 60;
       display.textContent = formatTime(remaining);
       toggleBtn.textContent = '⏸️';
+      // hide any old iframe
+      videoCont.innerHTML = '';
+      videoCont.style.display = 'none';
       startTimer();
     });
 
-    // clear form inputs
+    // clear form
     nameInput.value = '';
     minsInput.value = '';
+    urlInput.value  = '';
 
     function startTimer() {
       if (running) return;
-      running   = true;
+      running = true;
       toggleBtn.textContent = '⏸️';
       interval = setInterval(() => {
         if (remaining <= 0) {
           clearInterval(interval);
           running = false;
           toggleBtn.disabled = true;
+          // show and autoplay YouTube if provided
+          if (videoUrl) {
+            const vidId = extractYouTubeID(videoUrl);
+            if (vidId) {
+              videoCont.innerHTML = `
+                <iframe
+                  src="https://www.youtube.com/embed/${vidId}?autoplay=1"
+                  allow="autoplay; encrypted-media"
+                ></iframe>
+              `;
+              videoCont.style.display = 'block';
+            }
+          }
           alert(`${name}'s timer finished!`);
         } else {
           remaining--;
@@ -107,5 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const m = Math.floor(sec / 60).toString().padStart(2, '0');
     const s = (sec % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
+  }
+
+  function extractYouTubeID(url) {
+    // handles youtu.be/ID or youtube.com/watch?v=ID
+    const m = url.match(
+      /(?:youtu\.be\/|youtube\.com\/watch\?v=)([A-Za-z0-9_-]{11})/
+    );
+    return m ? m[1] : null;
   }
 });
