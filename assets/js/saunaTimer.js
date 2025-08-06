@@ -1,55 +1,79 @@
 // saunaTimer.js
+// We use the public Piped instance at yewtu.eu (no API key required)
+const INVIDIOUS = 'https://yewtu.eu';
+
 document.addEventListener('DOMContentLoaded', () => {
   const app = document.getElementById('sauna-app');
   app.innerHTML = `
     <form id="timer-form">
       <input type="text" id="person-name" placeholder="Name" required />
       <input type="number" id="timer-minutes" placeholder="Min" required min="1" />
-      <input type="url" id="timer-video" placeholder="YouTube URL (optional)" pattern="https?://.*" />
+      <input type="text" id="video-search" placeholder="YouTube keywords" />
+      <button type="button" id="search-video-btn">Search Videos</button>
+      <select id="video-select">
+        <option value="">-- No video selected --</option>
+      </select>
       <button type="submit">Start</button>
     </form>
     <div id="timers-container"></div>
   `;
 
-  const form      = app.querySelector('#timer-form');
-  const container = app.querySelector('#timers-container');
+  const form      = document.getElementById('timer-form');
+  const searchBtn = document.getElementById('search-video-btn');
+  const select    = document.getElementById('video-select');
+  const container = document.getElementById('timers-container');
 
+  // Search YouTube via Invidious
+  searchBtn.addEventListener('click', () => {
+    const q = document.getElementById('video-search').value.trim();
+    if (!q) return alert('Please enter keywords to search.');
+    fetch(`${INVIDIOUS}/api/v1/search?query=${encodeURIComponent(q)}&type=video&limit=5`)
+      .then(res => res.json())
+      .then(list => {
+        select.innerHTML = '<option value="">-- No video selected --</option>';
+        list.forEach(item => {
+          const opt = document.createElement('option');
+          opt.value = item.videoId;
+          opt.textContent = item.title;
+          select.appendChild(opt);
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Video search failed—try again.');
+      });
+  });
+
+  // Form submits a new timer
   form.addEventListener('submit', e => {
     e.preventDefault();
+    const name    = document.getElementById('person-name').value.trim();
+    const mins    = parseInt(document.getElementById('timer-minutes').value, 10);
+    const videoId = select.value;
+    if (!name || isNaN(mins) || mins < 1) return;
 
-    const nameInput  = form.querySelector('#person-name');
-    const minsInput  = form.querySelector('#timer-minutes');
-    const urlInput   = form.querySelector('#timer-video');
-    const name       = nameInput.value.trim();
-    const minutes    = parseInt(minsInput.value, 10);
-    const videoUrl   = urlInput.value.trim();
-    if (!name || isNaN(minutes) || minutes < 1) return;
-
-    // create card
     const card = document.createElement('div');
     card.className = 'timer-card';
     card.innerHTML = `
       <h3>${name}</h3>
-      <div class="time-display">${formatTime(minutes * 60)}</div>
+      <div class="time-display">${formatTime(mins * 60)}</div>
       <button class="toggle-btn">⏸️</button>
       <button class="reset-btn">↻</button>
       <div class="video-container" style="display:none;"></div>
     `;
     container.appendChild(card);
 
-    let remaining = minutes * 60;
-    let interval  = null;
-    let running   = false;
+    let remaining = mins * 60;
+    let interval;
+    let running = false;
 
-    const display      = card.querySelector('.time-display');
-    const toggleBtn    = card.querySelector('.toggle-btn');
-    const resetBtn     = card.querySelector('.reset-btn');
-    const videoCont    = card.querySelector('.video-container');
+    const display   = card.querySelector('.time-display');
+    const toggleBtn = card.querySelector('.toggle-btn');
+    const resetBtn  = card.querySelector('.reset-btn');
+    const videoCont = card.querySelector('.video-container');
 
-    // start immediately
     startTimer();
 
-    // play/pause toggle
     toggleBtn.addEventListener('click', () => {
       if (running) {
         clearInterval(interval);
@@ -60,22 +84,20 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // reset
     resetBtn.addEventListener('click', () => {
       clearInterval(interval);
-      remaining = minutes * 60;
+      remaining = mins * 60;
       display.textContent = formatTime(remaining);
       toggleBtn.textContent = '⏸️';
-      // hide any old iframe
       videoCont.innerHTML = '';
       videoCont.style.display = 'none';
+      card.classList.remove('warning', 'danger');
       startTimer();
     });
 
-    // clear form
-    nameInput.value = '';
-    minsInput.value = '';
-    urlInput.value  = '';
+    // clear inputs
+    form.reset();
+    select.innerHTML = '<option value="">-- No video selected --</option>';
 
     function startTimer() {
       if (running) return;
@@ -86,39 +108,39 @@ document.addEventListener('DOMContentLoaded', () => {
           clearInterval(interval);
           running = false;
           toggleBtn.disabled = true;
-          // show and autoplay YouTube if provided
-          if (videoUrl) {
-            const vidId = extractYouTubeID(videoUrl);
-            if (vidId) {
-              videoCont.innerHTML = `
-                <iframe
-                  src="https://www.youtube.com/embed/${vidId}?autoplay=1"
-                  allow="autoplay; encrypted-media"
-                ></iframe>
-              `;
-              videoCont.style.display = 'block';
-            }
+          card.classList.remove('warning', 'danger');
+          // embed & autoplay if chosen
+          if (videoId) {
+            videoCont.innerHTML = `
+              <iframe
+                src="https://www.youtube.com/embed/${videoId}?autoplay=1"
+                allow="autoplay; encrypted-media"
+              ></iframe>
+            `;
+            videoCont.style.display = 'block';
           }
-          alert(`${name}'s timer finished!`);
+          // (no popup)
         } else {
           remaining--;
+          // color warnings
+          if (remaining < 10) {
+            card.classList.add('danger');
+            card.classList.remove('warning');
+          } else if (remaining < 60) {
+            card.classList.add('warning');
+            card.classList.remove('danger');
+          } else {
+            card.classList.remove('warning', 'danger');
+          }
           display.textContent = formatTime(remaining);
         }
       }, 1000);
     }
   });
 
-  function formatTime(sec) {
-    const m = Math.floor(sec / 60).toString().padStart(2, '0');
-    const s = (sec % 60).toString().padStart(2, '0');
+  function formatTime(secs) {
+    const m = String(Math.floor(secs / 60)).padStart(2, '0');
+    const s = String(secs % 60).padStart(2, '0');
     return `${m}:${s}`;
-  }
-
-  function extractYouTubeID(url) {
-    // handles youtu.be/ID or youtube.com/watch?v=ID
-    const m = url.match(
-      /(?:youtu\.be\/|youtube\.com\/watch\?v=)([A-Za-z0-9_-]{11})/
-    );
-    return m ? m[1] : null;
   }
 });
