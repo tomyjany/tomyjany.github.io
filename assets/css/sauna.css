@@ -1,0 +1,51 @@
+/* simple “frosty” translucent cards on your blue background */
+#sauna-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#timer-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+#timer-form input,
+#timer-form button {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: none;
+}
+#timer-form input {
+  width: 6rem;
+}
+#timers-container {
+  width: 100%;
+  max-width: 400px;
+}
+.timer-card {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.timer-card h3 {
+  flex: 1;
+  margin: 0;
+  font-size: 1.1rem;
+}
+.timer-card .time-display {
+  font-family: monospace;
+  font-size: 1.2rem;
+  width: 4.5rem;
+  text-align: center;
+}
+.timer-card button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
