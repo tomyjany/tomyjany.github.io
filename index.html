@@ -2,72 +2,245 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Tomáš Janovec - ML/AI specialist focused on computer vision, large language models, data science, and fullstack DevOps."
+  />
   <title>Tomáš Janovec</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: linear-gradient(135deg, #1e3a8a, #60a5fa);
-      color: #f0fdf4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      min-height: 100vh;
-      padding: 2rem;
-    }
-    .container {
-      max-width: 600px;
-    }
-    img.profile {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      border: 4px solid #f0fdf4;
-    }
-    h1 {
-      margin-top: .5rem;
-    }
-    .links a {
-      margin: 0 .5rem;
-      color: #f0fdf4;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    section {
-      margin-top: 2rem;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 1rem;
-      border-radius: 8px;
-    }
-  </style>
-  <link rel="stylesheet" href="assets/css/sauna.css">
+  <link rel="stylesheet" href="assets/css/site.css" />
 </head>
 <body>
-  <div class="container">
-    <img class="profile" src="https://avatars.githubusercontent.com/u/74786110?v=4" alt="Tomáš’s avatar" />
-    <h1>Tomáš Janovec</h1>
-    <p>
-      AI and ML–focused developer. Recently finished my bachelor’s at the Technical University
-      in Liberec and am now an exchange student at the University of Tampere in Finland.
-      I work as a data scientist at
-      <a href="https://cxi.tul.cz/tym/omi" target="_blank" style="color:#f0fdf4; text-decoration:underline;">
-        CXI TUL
-      </a>.
-    </p>
-    <div class="links">
-      <a href="https://www.instagram.com/dzanyy1337/" target="_blank">Instagram</a>
-      <a href="https://www.linkedin.com/in/thomas-janovec-7a1a97283/" target="_blank">LinkedIn</a>
-      <a href="mailto:tomas.janovec@tul.cz">Email</a>
+  <div class="site-shell">
+    <div class="ambient-bg" aria-hidden="true">
+      <div class="ambient-grid"></div>
+      <div class="ambient-glow ambient-glow-a"></div>
+      <div class="ambient-glow ambient-glow-b"></div>
     </div>
 
-    <section id="sauna">
-      <h2>Sauna Timer</h2>
-      <div id="sauna-app"><!-- JS will render form & timers here --></div>
-    </section>
-  </div>
+    <header class="top-nav">
+      <a class="brand" href="#top" aria-label="Tomáš Janovec home">
+        <span class="brand-dot"></span>
+        <span>Tomáš Janovec</span>
+      </a>
 
-  <script defer src="assets/js/saunaTimer.js"></script>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#top">Home</a>
+        <a href="#hobbies">Hobbies</a>
+        <a href="#cv">CV</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="top" class="main-content">
+      <section class="hero hero-stage" aria-label="Hero stage">
+        <div class="hero-copy">
+          <p class="hero-badge">Machine Learning &amp; AI</p>
+          <h1>Tomáš Janovec</h1>
+          <h2>Applied AI for real data and real outcomes</h2>
+          <p class="hero-lead">Computer vision, large language models, data science, and fullstack DevOps.</p>
+          <p class="hero-subtitle">ML/AI Specialist at CXI, Technical University of Liberec.</p>
+          <p class="focus-line hero-focus-line">Computer Vision · Large Language Models · Data Science · Fullstack DevOps</p>
+
+          <div class="hero-actions" role="group" aria-label="Primary actions">
+            <a class="btn btn-primary" href="#cv">View CV</a>
+            <a class="btn btn-ghost" href="mailto:tomas.janovec@tul.cz">Get in Touch</a>
+          </div>
+        </div>
+
+        <figure class="hero-media">
+          <picture>
+            <source
+              srcset="assets/images/tomas-hero-800.webp 800w, assets/images/tomas-hero-1280.webp 1280w"
+              sizes="(max-width: 950px) 92vw, 48vw"
+              type="image/webp"
+            />
+            <img
+              src="assets/images/tomas-hero-fallback.jpg"
+              width="1280"
+              height="1760"
+              alt="Tomáš Janovec sitting on a rock in front of a mountain peak near Kvalvika beach in Lofoten, Norway"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </picture>
+        </figure>
+      </section>
+
+      <section id="hobbies" class="hobbies-panel" aria-labelledby="hobbies-title">
+        <h2 id="hobbies-title">Hobbies</h2>
+        <div class="hobbies-chips" aria-label="Hobbies list">
+          <span>Gym</span>
+          <span>Piano</span>
+          <span>Guitar</span>
+          <span>Electric Guitar</span>
+          <span>Singing</span>
+          <span>Rubik's Cube (speedcubing)</span>
+          <span>Coffee enthusiast</span>
+          <span>Sauna enthusiast</span>
+        </div>
+        <div class="hobbies-links">
+          <a href="https://www.facebook.com/Votrokband/" target="_blank" rel="noreferrer">Votrok (Band)</a>
+          <a href="https://open.spotify.com/track/6KqUDpdiLEFHS2BhAkOizm" target="_blank" rel="noreferrer">Corpses (Spotify)</a>
+        </div>
+      </section>
+
+      <article id="cv" class="cv-page">
+        <header class="cv-header">
+          <h1>Curriculum Vitae</h1>
+        </header>
+
+        <section class="section-block" aria-labelledby="profile-title">
+          <h2 id="profile-title">Profile</h2>
+          <div class="section-body">
+            <p class="cv-summary">ML/AI engineer focused on clear, production-minded solutions in data science and modern AI systems.</p>
+          </div>
+        </section>
+
+        <section class="section-block" aria-labelledby="work-title">
+          <h2 id="work-title">Work-related experience</h2>
+          <div class="section-body">
+            <ol class="timeline">
+              <li>
+                <p class="timeline-period">2024 - Present</p>
+                <h3>ML/AI Specialist</h3>
+                <p class="timeline-org">CXI, Technical University of Liberec</p>
+                <ul>
+                  <li>Ongoing employment role focused on applied machine learning and AI systems.</li>
+                  <li>Design and evaluation of applied large language model workflows.</li>
+                  <li>Computer vision and data processing pipelines for real-world analytics tasks.</li>
+                  <li><a class="timeline-link" href="https://www.cxi.tul.cz/cs/systemova-integrace/modelovani-procesu-a-ai/" target="_blank" rel="noreferrer">CXI AI page</a></li>
+                  <li><a class="timeline-link" href="https://support.cxi.tul.cz/en/staff-directory/tomas.janovec" target="_blank" rel="noreferrer">Employee profile</a></li>
+                </ul>
+              </li>
+              <li>
+                <p class="timeline-period">2025</p>
+                <h3>AI for SIEM log querying</h3>
+                <p class="timeline-org">Rozjeď AI ve výrobě (CXI Liberec)</p>
+                <ul>
+                  <li>Conference date and venue: May 29, 2025 (9:00-16:00), iQLANDIA Liberec.</li>
+                  <li>Presented practical AI workflows for SIEM log querying: logs that speak, AI that understands.</li>
+                  <li><a class="timeline-link" href="https://www.linkedin.com/posts/jan-koci-906278225_rozjedai-aivevyrobe-cxiliberec-ugcPost-7333446464980873217-yizy" target="_blank" rel="noreferrer">LinkedIn post by Jan Kočí</a></li>
+                </ul>
+              </li>
+              <li>
+                <p class="timeline-period">2025</p>
+                <h3>Dean's Award for Outstanding Bachelor's Thesis</h3>
+                <p class="timeline-org">Faculty of Mechatronics, Informatics and Interdisciplinary Studies, TUL</p>
+                <ul>
+                  <li>Received "Cena děkana za vynikající bakalářskou práci" for bachelor thesis work.</li>
+                  <li>Thesis: "System for Visual Processing of Video Recordings of Television Programmes" (2025).</li>
+                  <li>Built an integrated video-mining pipeline with scene segmentation, OCR, person identification, and TV logo detection.</li>
+                  <li><a class="timeline-link" href="https://theses.cz/id/evcjhi/?info" target="_blank" rel="noreferrer">Thesis record</a></li>
+                  <li><a class="timeline-link" href="https://github.com/tomyjany/BroadcastInsight" target="_blank" rel="noreferrer">BroadcastInsight / NewsVideoMiner (GitHub)</a></li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="section-block" aria-labelledby="other-title">
+          <h2 id="other-title">Other experience</h2>
+          <div class="section-body">
+            <ol class="timeline">
+              <li>
+                <p class="timeline-period">2026</p>
+                <h3>World Championship of Academic Kyykkä</h3>
+                <p class="timeline-org">Competition Participant</p>
+                <ul>
+                  <li>Competed in the world championship weekend of Academic Kyykkä in Finland.</li>
+                  <li><a class="timeline-link" href="https://kyykka.fi/news-item/yleista-infoa-kyykkaviikonlopusta-general-info-about-the-kyykka-weekend" target="_blank" rel="noreferrer">Event information</a></li>
+                </ul>
+              </li>
+              <li>
+                <p class="timeline-period">2023</p>
+                <h3>Votrok - Single "Corpses"</h3>
+                <p class="timeline-org">Music Release</p>
+                <ul>
+                  <li>Performed as lead singer and lead guitarist on the single release.</li>
+                  <li><a class="timeline-link" href="https://open.spotify.com/track/6KqUDpdiLEFHS2BhAkOizm" target="_blank" rel="noreferrer">Listen on Spotify</a></li>
+                </ul>
+              </li>
+              <li>
+                <p class="timeline-period">2020 - 2021</p>
+                <h3>KSP(Z) Programming Competition</h3>
+                <p class="timeline-org">Successful Problem Solver</p>
+                <ul>
+                  <li>Recognized as a successful solver in the Czech KSP(Z) competition rounds.</li>
+                  <li><a class="timeline-link" href="https://ksp.mff.cuni.cz/z/" target="_blank" rel="noreferrer">Competition website</a></li>
+                </ul>
+              </li>
+              <li>
+                <p class="timeline-period">2015</p>
+                <h3>Czech Open Speedcubing</h3>
+                <p class="timeline-org">Competition Participant</p>
+                <ul>
+                  <li>Competed in Czech Open speedcubing.</li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="section-block" aria-labelledby="education-title">
+          <h2 id="education-title">Education</h2>
+          <div class="section-body">
+            <ol class="timeline">
+              <li>
+                <p class="timeline-period">Current</p>
+                <h3>Ing. Intelligent Systems (ongoing)</h3>
+                <p class="timeline-org">Technical University of Liberec</p>
+                <ul>
+                  <li>Currently continuing graduate engineering studies.</li>
+                </ul>
+              </li>
+              <li>
+                <p class="timeline-period">Completed</p>
+                <h3>BSc Intelligent Systems (completed)</h3>
+                <p class="timeline-org">Technical University of Liberec</p>
+                <ul>
+                  <li>Bachelor's degree successfully completed.</li>
+                </ul>
+              </li>
+              <li>
+                <p class="timeline-period">One Academic Year</p>
+                <h3>Exchange Studies</h3>
+                <p class="timeline-org">Tampere University</p>
+                <ul>
+                  <li>Completed one year of exchange studies in Finland.</li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="section-block" aria-labelledby="languages-title">
+          <h2 id="languages-title">Languages</h2>
+          <div class="section-body">
+            <ul class="languages-list">
+              <li>Czech: Native</li>
+              <li>English: Proficient</li>
+              <li>German: B1</li>
+              <li>Finnish: A2</li>
+            </ul>
+          </div>
+        </section>
+      </article>
+
+      <section id="contact" class="contact-strip" aria-labelledby="contact-title">
+        <h2 id="contact-title">Connect</h2>
+        <div class="contact-list">
+          <a href="mailto:tomas.janovec@tul.cz">Email</a>
+          <a href="https://github.com/tomyjany" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/thomas-janovec-7a1a97283/" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="https://support.cxi.tul.cz/en/staff-directory/tomas.janovec" target="_blank" rel="noreferrer">Work (CXI)</a>
+          <a href="https://www.fm.tul.cz/fakulta" target="_blank" rel="noreferrer">Study (TUL)</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">© Tomáš Janovec 2026</footer>
+  </div>
 </body>
 </html>
