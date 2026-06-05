@@ -203,6 +203,7 @@ a {
 .hero-copy {
   display: grid;
   gap: 0.7rem;
+  min-width: 0;
   padding-bottom: 0.38rem;
   z-index: 3;
 }
@@ -219,7 +220,7 @@ a {
 .hero-copy h1 {
   font-family: "Manrope", "IBM Plex Sans", sans-serif;
   font-size: clamp(2.9rem, 7.4vw, 6.3rem);
-  letter-spacing: -0.032em;
+  letter-spacing: 0;
   line-height: 0.89;
   margin: 0;
   text-shadow: 0 0 34px rgba(125, 97, 255, 0.23);
@@ -245,6 +246,7 @@ a {
   line-height: 1.58;
   margin: 0.28rem 0 0;
   max-width: 50ch;
+  overflow-wrap: break-word;
 }
 
 .hero-subtitle {
@@ -252,6 +254,7 @@ a {
   line-height: 1.56;
   margin: 0;
   max-width: 58ch;
+  overflow-wrap: break-word;
 }
 
 .hero-actions {
@@ -336,7 +339,7 @@ a {
 
 .hero-media img {
   object-fit: cover;
-  object-position: center 30%;
+  object-position: center 58%;
 }
 
 .focus-line {
@@ -496,7 +499,7 @@ a {
 .cv-header h1 {
   font-family: "Manrope", "IBM Plex Sans", sans-serif;
   font-size: clamp(2.05rem, 5vw, 4rem);
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   margin: 0;
 }
 
@@ -567,7 +570,7 @@ a {
 .timeline h3 {
   font-family: "Manrope", "IBM Plex Sans", sans-serif;
   font-size: 1.06rem;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   margin: 0.3rem 0 0;
 }
 
@@ -747,6 +750,13 @@ a:focus-visible {
     margin-top: 1.02rem;
   }
 
+  .top-nav,
+  .main-content,
+  .site-footer {
+    max-width: min(320px, calc(100vw - 1.5rem));
+    width: min(320px, calc(100vw - 1.5rem));
+  }
+
   .brand {
     font-size: 0.76rem;
   }
@@ -756,7 +766,22 @@ a:focus-visible {
   }
 
   .hero-copy h1 {
+    font-size: 2.55rem;
     line-height: 0.93;
+  }
+
+  .hero-copy,
+  .hero,
+  .hero-media,
+  .hero-lead,
+  .hero-subtitle,
+  .hero-focus-line,
+  .hobbies-panel,
+  .cv-page,
+  .contact-strip {
+    max-width: 100%;
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   .hero-media {
@@ -765,6 +790,13 @@ a:focus-visible {
 
   .focus-line {
     letter-spacing: 0.095em;
+    overflow: visible;
+    white-space: normal;
+  }
+
+  .hobbies-chips span {
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
 
   .contact-list {
