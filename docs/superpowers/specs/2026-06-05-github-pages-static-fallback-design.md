@@ -22,6 +22,7 @@ The requested GitHub Pages version should be a simple fallback if the primary we
 - Copy the optimized hero image assets into this repository and reference them locally.
 - Use English content as the static default.
 - Keep the page deployable directly by GitHub Pages from repository files.
+- Keep the page usable if optional external font loading fails.
 
 ## Non-Goals
 
@@ -30,6 +31,7 @@ The requested GitHub Pages version should be a simple fallback if the primary we
 - Do not add dynamic interactivity beyond normal links.
 - Do not introduce a new framework, bundler, or dependency.
 - Do not keep any sauna timer UI, JavaScript, CSS, or page section.
+- Do not remove ordinary profile content just because it mentions sauna as a hobby.
 
 ## Proposed User Experience
 
@@ -55,6 +57,8 @@ Use the English content from `../tomasjanovec-web/src/content/profile.ts`:
 
 Markdown-style links inside timeline bullets should become normal external anchor links with `target="_blank"` and `rel="noreferrer"`.
 
+The hobby item `Sauna enthusiast` may remain because the removal request applies to the sauna timer feature, not to static profile content.
+
 ## Implementation Units
 
 ### Static HTML
@@ -76,13 +80,15 @@ Anchor links should point to same-page section IDs such as `#cv`, `#contact`, an
 
 ### Stylesheet
 
-Create a dedicated stylesheet for the fallback site, likely `assets/css/site.css`.
+Create a dedicated stylesheet for the fallback site at `assets/css/site.css`.
 
 It should adapt the existing source style from `../tomasjanovec-web/src/styles/base.css` to plain HTML classes. It should preserve the visual character while remaining smaller and static-page focused.
 
+The stylesheet may keep the source site's Google Fonts import for closer visual fidelity. The font stack must include local system fallbacks so the page remains usable if Google Fonts is unavailable.
+
 ### Assets
 
-Copy these source assets into this repository, for example under `assets/images/`:
+Copy these source assets into this repository under `assets/images/`:
 
 - `tomas-hero-800.webp`
 - `tomas-hero-1280.webp`
@@ -118,7 +124,7 @@ Verify the implementation by:
 - Checking that same-page anchors work.
 - Checking that external links and mail link are correct.
 - Checking responsive layout at desktop and mobile widths.
-- Running a repository search for `sauna` to ensure only intentional historical references remain, if any.
+- Running a repository search for `sauna` to ensure no timer implementation remains. The static hobby text `Sauna enthusiast` is allowed.
 
 ## Risks
 
@@ -133,3 +139,4 @@ Verify the implementation by:
 - The page contains the hero, CV content, hobbies, languages, contact links, and footer from the English source content.
 - The site works on GitHub Pages without a build step.
 - The implementation uses local image assets and has no runtime dependency on `../tomasjanovec-web`.
+- The implementation uses `assets/css/site.css` and local hero images under `assets/images/`.
